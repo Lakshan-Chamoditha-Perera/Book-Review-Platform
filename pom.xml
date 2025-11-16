@@ -20,6 +20,7 @@
         <module>bookservice</module>
         <module>reviewservice</module>
         <module>discoveryservice</module>
+        <module>apigatewayservice</module>
     </modules>
     <properties>
         <java.version>21</java.version>
