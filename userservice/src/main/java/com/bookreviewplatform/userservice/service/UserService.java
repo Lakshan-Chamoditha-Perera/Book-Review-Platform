@@ -8,7 +8,12 @@ import java.util.UUID;
 
 public interface UserService {
     List<UserDTO> getAllUsers();
+
     UserDTO saveUser(UserRequestDTO userRequestDTO);
+
     Boolean deleteUser(UUID id);
+
     UserDTO getUserByEmail(String email);
+
+    UserDTO getUserById(UUID id);
 }
