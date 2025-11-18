@@ -12,6 +12,5 @@ public interface ReviewService {
     List<ReviewDTO> getReviewsByBookId(UUID bookId);
     List<ReviewDTO> getReviewsByUserId(UUID userId);
     ReviewDTO saveReview(ReviewRequestDTO reviewRequestDTO);
-    ReviewDTO updateReview(UUID id, ReviewRequestDTO reviewRequestDTO);
     Boolean deleteReview(UUID id);
 }
