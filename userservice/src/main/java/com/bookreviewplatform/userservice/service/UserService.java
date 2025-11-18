@@ -1,19 +1,18 @@
 package com.bookreviewplatform.userservice.service;
 
-import com.bookreviewplatform.userservice.dto.UserDTO;
 import com.bookreviewplatform.userservice.dto.UserRequestDTO;
+import com.bookreviewplatform.userservice.payloads.StandardResponse;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    List<UserDTO> getAllUsers();
+    StandardResponse getAllUsers();
 
-    UserDTO saveUser(UserRequestDTO userRequestDTO);
+    StandardResponse saveUser(UserRequestDTO userRequestDTO);
 
-    Boolean deleteUser(UUID id);
+    StandardResponse deleteUser(UUID id);
 
-    UserDTO getUserByEmail(String email);
+    StandardResponse getUserByEmail(String email);
 
-    UserDTO getUserById(UUID id);
+    StandardResponse getUserById(UUID id);
 }
