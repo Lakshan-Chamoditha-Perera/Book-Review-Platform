@@ -88,7 +88,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<StandardResponse<UserDTO>> getUserById(@PathVariable UUID id) {
         logger.info("Received request to get user by id: " + id);
         try {
