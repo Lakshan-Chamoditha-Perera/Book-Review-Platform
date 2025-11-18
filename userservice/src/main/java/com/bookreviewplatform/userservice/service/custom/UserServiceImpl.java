@@ -3,6 +3,7 @@ package com.bookreviewplatform.userservice.service.custom;
 import com.bookreviewplatform.userservice.dto.UserDTO;
 import com.bookreviewplatform.userservice.dto.UserRequestDTO;
 import com.bookreviewplatform.userservice.entity.UserEntity;
+import com.bookreviewplatform.userservice.exception.UserNotFoundException;
 import com.bookreviewplatform.userservice.payloads.StandardResponse;
 import com.bookreviewplatform.userservice.repository.UserRepository;
 import com.bookreviewplatform.userservice.service.UserService;
@@ -80,11 +81,11 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userRepository.findByEmail(email)
                     .orElseThrow(() -> {
                         logger.severe("User not found with email: " + email);
-                        return new RuntimeException("User not found with email: " + email);
+                        return new UserNotFoundException("User not found with email: " + email);
                     });
             logger.fine("User found with email: " + email);
             return StandardResponse.success("User retrieved successfully", convertToDTO(userEntity));
-        } catch (RuntimeException e) {
+        } catch (UserNotFoundException e) {
             logger.warning("User not found with email: " + email);
             return StandardResponse.error("User not found", e.getMessage());
         } catch (Exception e) {
@@ -100,11 +101,11 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.severe("User not found with id: " + id);
-                        return new RuntimeException("User not found with id: " + id);
+                        return new UserNotFoundException("User not found with id: " + id);
                     });
             logger.fine("User found with id: " + id);
             return StandardResponse.success("User retrieved successfully", convertToDTO(userEntity));
-        } catch (RuntimeException e) {
+        } catch (UserNotFoundException e) {
             logger.warning("User not found with id: " + id);
             return StandardResponse.error("User not found", e.getMessage());
         } catch (Exception e) {
