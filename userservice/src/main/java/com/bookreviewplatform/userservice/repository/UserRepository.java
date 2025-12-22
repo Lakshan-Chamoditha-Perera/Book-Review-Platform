@@ -33,4 +33,16 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
      *         or {@link Optional#empty()} if no user exists with the given email
      */
     Optional<UserEntity> findByEmail(String email);
+    
+    /**
+     * Finds a user by their username.
+     *
+     * <p>Username is treated as a unique identifier in the system (enforced at database level),
+     * making this method ideal for authentication and duplicate checks.</p>
+     *
+     * @param username the username to search for (case-sensitive as per database collation)
+     * @return an {@link Optional} containing the {@link UserEntity} if found,
+     *         or {@link Optional#empty()} if no user exists with the given username
+     */
+    Optional<UserEntity> findByUsername(String username);
 }

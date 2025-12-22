@@ -8,13 +8,18 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * Standardized API response wrapper used across the User Service (and ideally the entire Book Review Platform).
+ * Standardized API response wrapper used across the User Service (and ideally
+ * the entire Book Review Platform).
  *
- * <p>Provides a consistent, predictable response structure for all REST endpoints,
- * making it easier for frontend clients and third-party integrations to handle success
- * and error cases uniformly.</p>
+ * <p>
+ * Provides a consistent, predictable response structure for all REST endpoints,
+ * making it easier for frontend clients and third-party integrations to handle
+ * success
+ * and error cases uniformly.
+ * </p>
  *
  * <h3>Response Structure Examples:</h3>
+ * 
  * <pre>
  * Success:
  * {
@@ -42,6 +47,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StandardResponse<T> {
+
+    /**
+     * HTTP status code for the response.
+     */
+    private int status;
 
     /**
      * Indicates whether the request was successful.
@@ -124,7 +134,8 @@ public class StandardResponse<T> {
     }
 
     /**
-     * Creates an error response with both a user-friendly message and detailed error.
+     * Creates an error response with both a user-friendly message and detailed
+     * error.
      *
      * @param message user-facing message (e.g., "Unable to process request")
      * @param error   detailed/technical error (e.g., exception message or code)

@@ -53,13 +53,17 @@ public class UserServiceImpl implements UserService {
      * Create a new user.
      * <p>
      * Pre-save checks:
-     * - If userRequestDTO.id is provided and already exists in DB -> reject (DuplicateResourceException).
-     * - If email is already used by another user -> reject (DuplicateResourceException).
+     * - If userRequestDTO.id is provided and already exists in DB -> reject
+     * (DuplicateResourceException).
+     * - If email is already used by another user -> reject
+     * (DuplicateResourceException).
      * <p>
-     * This method is transactional to ensure atomicity of the existence checks and the save.
+     * This method is transactional to ensure atomicity of the existence checks and
+     * the save.
      *
      * @param userRequestDTO request payload for new user
-     * @return StandardResponse with created UserDTO on success, or error details on failure
+     * @return StandardResponse with created UserDTO on success, or error details on
+     *         failure
      */
     @Override
     @Transactional
