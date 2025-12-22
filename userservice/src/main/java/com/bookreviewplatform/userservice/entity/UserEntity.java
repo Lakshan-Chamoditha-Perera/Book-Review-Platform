@@ -34,7 +34,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "password") // Critical: Prevent accidental logging of password
+@ToString(exclude = "password")
 public class UserEntity {
 
     /**
@@ -55,12 +55,25 @@ public class UserEntity {
     private String username;
 
     /**
-     * Hashed user password.
+     * Hashed user password with embedded salt.
      *
      * <p>
      * <strong>Never store plain-text passwords.</strong>
-     * This field should contain the output of a secure password encoder
-     * (e.g., BCryptPasswordEncoder in Spring Security).
+     * This field contains a BCrypt hash which includes:
+     * - Algorithm version ($2a$, $2b$, or $2y$)
+     * - Cost factor (number of hashing rounds, default: 10)
+     * - 22-character salt (randomly generated per password)
+     * - 31-character hash of the password
+     * </p>
+     * 
+     * <p>
+     * <strong>Example BCrypt hash format:</strong><br>
+     * $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+     * </p>
+     * 
+     * <p>
+     * The salt is automatically generated and embedded in the hash by BCrypt,
+     * so no separate salt field is needed. Each password gets a unique salt.
      * </p>
      */
     @Column(nullable = false, length = 255)
