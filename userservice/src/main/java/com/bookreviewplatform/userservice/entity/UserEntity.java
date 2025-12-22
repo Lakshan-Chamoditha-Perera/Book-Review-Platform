@@ -1,19 +1,30 @@
 package com.bookreviewplatform.userservice.entity;
 
+import com.bookreviewplatform.userservice.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Represents a user in the Book Review Platform system.
  *
- * <p>This entity is mapped to the "users" table (or default naming) in the database
- * and holds core user information required for authentication and identification.</p>
+ * <p>
+ * This entity is mapped to the "users" table (or default naming) in the
+ * database
+ * and holds core user information required for authentication and
+ * identification.
+ * </p>
  *
- * <p><strong>Security Note:</strong> The {@code password} field stores a hashed password
- * (never plain text). Passwords must be encoded using a strong one-way hashing algorithm
- * (e.g., BCrypt) before persisting.</p>
+ * <p>
+ * <strong>Security Note:</strong> The {@code password} field stores a hashed
+ * password
+ * (never plain text). Passwords must be encoded using a strong one-way hashing
+ * algorithm
+ * (e.g., BCrypt) before persisting.
+ * </p>
  *
  * @author Lakshan Chamoditha Perera
  * @since 1.0
@@ -46,9 +57,11 @@ public class UserEntity {
     /**
      * Hashed user password.
      *
-     * <p><strong>Never store plain-text passwords.</strong>
+     * <p>
+     * <strong>Never store plain-text passwords.</strong>
      * This field should contain the output of a secure password encoder
-     * (e.g., BCryptPasswordEncoder in Spring Security).</p>
+     * (e.g., BCryptPasswordEncoder in Spring Security).
+     * </p>
      */
     @Column(nullable = false, length = 255)
     private String password;
@@ -59,4 +72,13 @@ public class UserEntity {
      */
     @Column(nullable = false, unique = true, length = 100)
     private String email;
+
+    /**
+     * User roles for authorization.
+     * Stored as enum values in the database.
+     */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private List<Role> roles = new ArrayList<>();
 }
