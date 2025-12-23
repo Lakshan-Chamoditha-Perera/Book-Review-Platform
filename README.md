@@ -29,6 +29,7 @@ The Book Review Platform is a distributed system that allows users to browse boo
 ### Key Features
 
 - **User Management**: Registration, authentication, and profile management with role-based access control
+- **Internationalization (i18n)**: Multi-language support for user responses in English, Sinhala, and Tamil
 - **Book Catalog**: Comprehensive book management with ISBN tracking
 - **Review System**: User reviews and ratings with cross-service validation
 - **Service Discovery**: Dynamic service registration and discovery with Netflix Eureka
@@ -256,11 +257,29 @@ UserEntity {
 
 - **BCrypt Password Hashing**: 10 rounds, automatic salt generation
 - **JWT Token Generation**: Includes username, userId, and role claims
+- **Internationalization (i18n)**: Multi-language support for API responses
 - **Email Uniqueness Validation**: Prevents duplicate accounts
 - **Username Uniqueness Validation**: Ensures unique usernames
 - **ModelMapper Integration**: DTO conversion
 - **Global Exception Handling**: Consistent error responses
 - **Role-Based Access Control**: ADMIN and USER roles
+
+**Internationalization (i18n)**:
+
+The User Service supports localized responses in three languages:
+
+- **English (en)** - Default language
+- **Sinhala (si)** - සිංහල
+- **Tamil (ta)** - தமிழ்
+
+**Usage**: Include the `Accept-Language` header in your request:
+
+```http
+GET /api/v1/users/123
+Accept-Language: si
+```
+
+**Response messages** (success, error, validation) will be returned in the requested language.
 
 **Security Highlights**:
 
