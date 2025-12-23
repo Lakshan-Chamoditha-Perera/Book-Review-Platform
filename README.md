@@ -2945,18 +2945,9 @@ spring.datasource.url=jdbc:mysql://${DB_HOST}:${DB_PORT}/users_db
 
 ---
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## Authors
 
 **Lakshan Chamoditha Perera**
-
-- Senior Software Engineer
-- Microservices Architecture Specialist
 
 ---
 
