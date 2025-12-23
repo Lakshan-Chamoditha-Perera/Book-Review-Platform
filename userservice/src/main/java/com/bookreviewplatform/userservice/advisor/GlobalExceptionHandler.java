@@ -2,6 +2,8 @@ package com.bookreviewplatform.userservice.advisor;
 
 import com.bookreviewplatform.userservice.exception.UserNotFoundException;
 import com.bookreviewplatform.userservice.payloads.StandardResponse;
+import com.bookreviewplatform.userservice.util.i18.MessageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,82 +37,87 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  * @since 1.0
  */
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    /**
-     * Handles {@link UserNotFoundException} thrown when a user cannot be found by
-     * ID, email, or other criteria.
-     *
-     * @param ex      the thrown {@link UserNotFoundException}
-     * @param request the current web request (useful for logging or extracting
-     *                headers/context)
-     * @return a {@link ResponseEntity} containing a {@link StandardResponse} with
-     *         error details
-     *         and HTTP status {@code 404 Not Found}
-     */
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<StandardResponse<Object>> handleUserNotFoundException(
-            UserNotFoundException ex, WebRequest request) {
+        private final MessageService messageService;
 
-        StandardResponse<Object> response = StandardResponse.error(
-                "User not found",
-                ex.getMessage());
+        /**
+         * Handles {@link UserNotFoundException} thrown when a user cannot be found by
+         * ID, email, or other criteria.
+         *
+         * @param ex      the thrown {@link UserNotFoundException}
+         * @param request the current web request (useful for logging or extracting
+         *                headers/context)
+         * @return a {@link ResponseEntity} containing a {@link StandardResponse} with
+         *         error details
+         *         and HTTP status {@code 404 Not Found}
+         */
+        @ExceptionHandler(UserNotFoundException.class)
+        public ResponseEntity<StandardResponse<Object>> handleUserNotFoundException(
+                        UserNotFoundException ex, WebRequest request) {
 
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
+                String message = messageService.getMessage("user.not.found");
+                String error = messageService.getMessage("user.not.found.detail", ex.getMessage());
 
-    /**
-     * Handles {@link NoHandlerFoundException} thrown when no handler is found for
-     * a requested URL.
-     * This occurs when a client requests an API route that doesn't exist.
-     *
-     * @param ex      the thrown {@link NoHandlerFoundException}
-     * @param request the current web request
-     * @return a {@link ResponseEntity} containing a {@link StandardResponse} with
-     *         error details
-     *         and HTTP status {@code 404 Not Found}
-     */
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<StandardResponse<Object>> handleNoHandlerFoundException(
-            NoHandlerFoundException ex, WebRequest request) {
+                StandardResponse<Object> response = StandardResponse.error(message, error);
 
-        StandardResponse<Object> response = StandardResponse.error(
-                "Route not found",
-                "The requested API endpoint does not exist: " + ex.getRequestURL());
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
 
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
+        /**
+         * Handles {@link NoHandlerFoundException} thrown when no handler is found for
+         * a requested URL.
+         * This occurs when a client requests an API route that doesn't exist.
+         *
+         * @param ex      the thrown {@link NoHandlerFoundException}
+         * @param request the current web request
+         * @return a {@link ResponseEntity} containing a {@link StandardResponse} with
+         *         error details
+         *         and HTTP status {@code 404 Not Found}
+         */
+        @ExceptionHandler(NoHandlerFoundException.class)
+        public ResponseEntity<StandardResponse<Object>> handleNoHandlerFoundException(
+                        NoHandlerFoundException ex, WebRequest request) {
 
-    /**
-     * Fallback handler for any uncaught exceptions (acts as a safety net).
-     *
-     * <p>
-     * This prevents stack traces from being exposed in production and ensures
-     * the client always receives a structured {@link StandardResponse}.
-     * </p>
-     *
-     * <p>
-     * <strong>Note:</strong> In production, you may want to log the full stack
-     * trace
-     * (using a proper logger) while returning a generic message to the client.
-     * </p>
-     *
-     * @param ex      the unexpected exception
-     * @param request the current web request
-     * @return a {@link ResponseEntity} with HTTP status
-     *         {@code 500 Internal Server Error}
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<StandardResponse<Object>> handleGlobalException(
-            Exception ex, WebRequest request) {
+                String message = messageService.getMessage("general.route.not.found");
+                String error = message + ": " + ex.getRequestURL();
 
-        // TODO: Log the full exception with a proper logger (e.g., SLF4J + Logback)
-        // log.error("Unexpected error occurred", ex);
+                StandardResponse<Object> response = StandardResponse.error(message, error);
 
-        StandardResponse<Object> response = StandardResponse.error(
-                "Internal server error",
-                "An unexpected error occurred. Please try again later.");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
 
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+        /**
+         * Fallback handler for any uncaught exceptions (acts as a safety net).
+         *
+         * <p>
+         * This prevents stack traces from being exposed in production and ensures
+         * the client always receives a structured {@link StandardResponse}.
+         * </p>
+         *
+         * <p>
+         * <strong>Note:</strong> In production, you may want to log the full stack
+         * trace
+         * (using a proper logger) while returning a generic message to the client.
+         * </p>
+         *
+         * @param ex      the unexpected exception
+         * @param request the current web request
+         * @return a {@link ResponseEntity} with HTTP status
+         *         {@code 500 Internal Server Error}
+         */
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<StandardResponse<Object>> handleGlobalException(
+                        Exception ex, WebRequest request) {
+
+                // TODO: Log the full exception with a proper logger (e.g., SLF4J + Logback)
+                // log.error("Unexpected error occurred", ex);
+
+                String message = messageService.getMessage("general.internal.error");
+
+                StandardResponse<Object> response = StandardResponse.error(message, message);
+
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 }

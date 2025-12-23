@@ -7,6 +7,7 @@ import com.bookreviewplatform.userservice.exception.DuplicateResourceException;
 import com.bookreviewplatform.userservice.exception.UserNotFoundException;
 import com.bookreviewplatform.userservice.payloads.StandardResponse;
 import com.bookreviewplatform.userservice.repository.UserRepository;
+import com.bookreviewplatform.userservice.util.i18.MessageService;
 import com.bookreviewplatform.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final MessageService messageService;
 
     @Override
     public StandardResponse getAllUsers() {
@@ -96,7 +98,9 @@ public class UserServiceImpl implements UserService {
 
             UserEntity savedUser = userRepository.save(userEntity);
             logger.info("User created successfully with id: " + savedUser.getId());
-            return StandardResponse.success("User created successfully", modelMapper.map(savedUser, UserDTO.class));
+            return StandardResponse.success(
+                    messageService.getMessage("user.created.successfully"),
+                    modelMapper.map(savedUser, UserDTO.class));
         } catch (DuplicateResourceException e) {
             // Known business validation error -> return a friendly error response
             logger.warning("Duplicate resource: " + e.getMessage());
@@ -114,12 +118,14 @@ public class UserServiceImpl implements UserService {
             logger.fine("Checking if user exists with id: " + id);
             if (!userRepository.existsById(id)) {
                 logger.warning("User not found with id: " + id);
-                return StandardResponse.error("User not found", "User with id " + id + " does not exist");
+                return StandardResponse.error(
+                        messageService.getMessage("user.not.found"),
+                        messageService.getMessage("user.not.found.with.id", id));
             }
             logger.fine("Deleting user with id: " + id);
             userRepository.deleteById(id);
             logger.info("User deleted successfully with id: " + id);
-            return StandardResponse.success("User deleted successfully", true);
+            return StandardResponse.success(messageService.getMessage("user.deleted.successfully"), true);
         } catch (Exception e) {
             logger.severe("Error deleting user: " + e.getMessage());
             return StandardResponse.error("Failed to delete user", e.getMessage());
@@ -133,13 +139,15 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userRepository.findByEmail(email)
                     .orElseThrow(() -> {
                         logger.severe("User not found with email: " + email);
-                        return new UserNotFoundException("User not found with email: " + email);
+                        return new UserNotFoundException(messageService.getMessage("user.not.found.with.email", email));
                     });
             logger.fine("User found with email: " + email);
-            return StandardResponse.success("User retrieved successfully", modelMapper.map(userEntity, UserDTO.class));
+            return StandardResponse.success(
+                    messageService.getMessage("general.success"),
+                    modelMapper.map(userEntity, UserDTO.class));
         } catch (UserNotFoundException e) {
             logger.warning("User not found with email: " + email);
-            return StandardResponse.error("User not found", e.getMessage());
+            return StandardResponse.error(messageService.getMessage("user.not.found"), e.getMessage());
         } catch (Exception e) {
             logger.severe("Error retrieving user: " + e.getMessage());
             return StandardResponse.error("Failed to retrieve user", e.getMessage());
@@ -153,13 +161,15 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.severe("User not found with id: " + id);
-                        return new UserNotFoundException("User not found with id: " + id);
+                        return new UserNotFoundException(messageService.getMessage("user.not.found.with.id", id));
                     });
             logger.fine("User found with id: " + id);
-            return StandardResponse.success("User retrieved successfully", modelMapper.map(userEntity, UserDTO.class));
+            return StandardResponse.success(
+                    messageService.getMessage("general.success"),
+                    modelMapper.map(userEntity, UserDTO.class));
         } catch (UserNotFoundException e) {
             logger.warning("User not found with id: " + id);
-            return StandardResponse.error("User not found", e.getMessage());
+            return StandardResponse.error(messageService.getMessage("user.not.found"), e.getMessage());
         } catch (Exception e) {
             logger.severe("Error retrieving user: " + e.getMessage());
             return StandardResponse.error("Failed to retrieve user", e.getMessage());
